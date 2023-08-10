@@ -248,7 +248,8 @@ class bepassClass {
                 "WorkerAddress": util.stringToWorkerAddress(bepass.workerAddress),
                 "WorkerIPPortAddress": util.stringToWorkerIPPort(bepass.workerCleanIPAndPort),
                 "WorkerEnabled": bepass.workerEnabled,
-                "WorkerDNSOnly": bepass.workerDNSOnly
+                "WorkerDNSOnly": bepass.workerDNSOnly,
+                "EnableLowLevelSockets": true
             };
 
             let v = {};
