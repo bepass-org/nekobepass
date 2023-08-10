@@ -1,5 +1,5 @@
 *.iml
-./bepassKey.jks
+*.jks
 .gradle
 /local.properties
 .idea
