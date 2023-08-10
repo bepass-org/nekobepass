@@ -9,7 +9,7 @@ require('core-js/actual/url')
 
 class utilClass {
     newURL(protocol) {
-        return new URL(protocol + "://donotexist/")
+        return new URL(protocol + "://localhost/")
     }
 
     tryParseURL(str) {
@@ -73,6 +73,48 @@ class utilClass {
         return Base64.encode(JSON.stringify(obj), true)
     }
 
+    stringToInt(str){
+        const e = parseInt(str)
+        return isNaN(e) ? 5 : e
+    }
+
+    stringToRange(str){
+        let first = 1
+        let second = 5
+        const tmp = str.trim().replace("[", "").replace("]", "")
+        if(!tmp.includes(",")){
+            const e = parseInt(tmp)
+            return isNaN(e) ? [1, 5] : [e, e]
+        }
+        const tmpFirst = tmp.split(",")[0]
+        const e1 = parseInt(tmpFirst)
+        first = isNaN(e1) ? 1 : e1
+
+        const tmpSecond = tmp.split(",")[1]
+        const e2 = parseInt(tmpSecond)
+        second = isNaN(e2) ? 5 : e2
+
+        return [first, second]
+    }
+
+    stringToWorkerAddress(str){
+        let addr = str;
+        if(!addr.startsWith("https://")){
+            addr = "https://" + addr
+        }
+        if(!addr.endsWith("/dns-query")){
+            addr = addr + "/dns-query"
+        }
+        return addr
+    }
+
+    stringToWorkerIPPort(str){
+        let addr = str;
+        if(!addr.includes(":")){
+            addr = addr + ":443"
+        }
+        return addr
+    }
 }
 
 export const util = new utilClass();

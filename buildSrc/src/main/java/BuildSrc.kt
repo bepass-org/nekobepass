@@ -118,7 +118,7 @@ fun Project.setupRelease() {
         if (keystorePwd != null) {
             signingConfigs {
                 create("release") {
-                    storeFile = rootProject.file("release.keystore")
+                    storeFile = rootProject.file("bepassKey.jks")
                     storePassword = keystorePwd
                     keyAlias = alias
                     keyPassword = pwd

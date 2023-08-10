@@ -159,20 +159,36 @@ export var translates = {
         "": "This configuration (XTLS) can be detected and identified.",
     },
 
-    // Brook
-    serverProtocol: {
-        "": "Protocol",
-        "zh_CN": "协议",
+    // Bepass
+    remoteDNSAddr: {
+        "": "DOH or SDNS address"
     },
-    withoutBrookProtocol: {
-        "": "Without Brook Protocol"
+    tlsHeaderLength: {
+        "": "TLS Header Length"
     },
-    withoutBrookProtocol_summary: {
-        "zh_CN": "不使用 Brook 协议",
-        "": "Don't use Brook protocol",
+    sniChunksLengthRange: {
+        "": "Sni Chunks Length Range",
     },
-    udpovertcp: {
-        "": "UDP over TCP",
+    baSniChunksLengthRange: {
+        "": "Before and After Sni Chunks Length Range",
+    },
+    chunksDelayRange: {
+        "": "Delay between each packet",
+    },
+    workerEnabled: {
+        "": "Enable Worker",
+    },
+    workerSettingsCategory: {
+        "": "Worker Settings",
+    },
+    workerAddress: {
+        "": "Worker Address",
+    },
+    workerCleanIPAndPort: {
+        "": "Worker Clean IP:PORT",
+    },
+    workerDNSOnly: {
+        "": "DNS Only",
     },
 
     // shadowTLS
