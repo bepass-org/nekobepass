@@ -115,6 +115,25 @@ class utilClass {
         }
         return addr
     }
+
+    stringToHostsArray(str){
+        const hosts = []
+        const hostsList = str.trim().split(",")
+        if(hostsList){
+            for(let i = 0; i < hostsList.length; i++) {
+                const sTemp = hostsList[i].split(":")
+                if(sTemp.length > 1){
+                    hosts.push(
+                        {
+                            "Domain": sTemp[0],
+                            "IP": sTemp[1]
+                        }
+                    )
+                }
+            }
+        }
+        return hosts
+    }
 }
 
 export const util = new utilClass();

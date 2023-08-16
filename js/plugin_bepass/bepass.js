@@ -14,16 +14,21 @@ class bepassClass {
         this.defaultSharedStorage.jsVersion = 1;
         this.defaultSharedStorage.name = "bepass";
         // end of default keys
-        this.defaultSharedStorage.tlsHeaderLength = 5;
-        this.defaultSharedStorage.remoteDNSAddr = "https://1.1.1.1/dns-query";
-        this.defaultSharedStorage.dnsCacheTTL = 30;
-        this.defaultSharedStorage.baSniChunksLengthRange = "1, 5";
+        this.defaultSharedStorage.tlsHeaderLength = "5";
+        this.defaultSharedStorage.remoteDNSAddr = "https://yarp.lefolgoc.net/dns-query";
+        this.defaultSharedStorage.dnsCacheTTL = "1800";
+        this.defaultSharedStorage.dnsRequestTimeout = "10";
+        this.defaultSharedStorage.baSniChunksLengthRange = "5, 10";
         this.defaultSharedStorage.sniChunksLengthRange = "1, 5";
-        this.defaultSharedStorage.chunksDelayRange = "20, 50";
+        this.defaultSharedStorage.chunksDelayRange = "30, 40";
         this.defaultSharedStorage.allowInsecure = false;
+        this.defaultSharedStorage.enableDNSFragmentation = false;
         this.defaultSharedStorage.workerEnabled = false;
         this.defaultSharedStorage.workerDNSOnly = false;
+        this.defaultSharedStorage.tlsPaddingEnabled = false;
+        this.defaultSharedStorage.tlsPaddingSize = "200, 500";
         this.defaultSharedStorage.workerCleanIPAndPort = "104.31.16.104:443";
+        this.defaultSharedStorage.hosts = "example.com:1.2.3.4, yarp.lefolgoc.net:5.39.88.20";
         this.defaultSharedStorage.workerAddress = "https://example.user.worker.dev/dns-query";
 
         for (var k in this.defaultSharedStorage) {
@@ -54,9 +59,13 @@ class bepassClass {
         builder.searchParams.set("remoteDNSAddr", this.sharedStorage.remoteDNSAddr)
         builder.searchParams.set("sniChunksLengthRange", this.sharedStorage.sniChunksLengthRange)
         builder.searchParams.set("baSniChunksLengthRange", this.sharedStorage.baSniChunksLengthRange)
+        builder.searchParams.set("tlsPaddingSize", this.sharedStorage.tlsPaddingSize)
         builder.searchParams.set("chunksDelayRange", this.sharedStorage.chunksDelayRange)
         builder.searchParams.set("workerAddress", this.sharedStorage.workerAddress)
         builder.searchParams.set("workerCleanIPAndPort", this.sharedStorage.workerCleanIPAndPort)
+        builder.searchParams.set("hosts", this.sharedStorage.hosts)
+        builder.searchParams.set("dnsCacheTTL", this.sharedStorage.dnsCacheTTL)
+        builder.searchParams.set("dnsRequestTimeout", this.sharedStorage.dnsRequestTimeout)
 
         if (this.sharedStorage.allowInsecure) {
             builder.searchParams.set("allow_insecure", "1")
@@ -66,6 +75,18 @@ class bepassClass {
             builder.searchParams.set("workerEnabled", "1")
         } else {
             builder.searchParams.set("workerEnabled", "0")
+        }
+
+        if (this.sharedStorage.enableDNSFragmentation) {
+            builder.searchParams.set("enableDNSFragmentation", "1")
+        } else {
+            builder.searchParams.set("enableDNSFragmentation", "0")
+        }
+
+        if (this.sharedStorage.tlsPaddingEnabled) {
+            builder.searchParams.set("tlsPaddingEnabled", "1")
+        } else {
+            builder.searchParams.set("tlsPaddingEnabled", "0")
         }
 
         if (this.sharedStorage.workerDNSOnly) {
@@ -90,13 +111,28 @@ class bepassClass {
                 preferences: [
                     {
                         type: "EditTextPreference",
+                        key: "tlsHeaderLength",
+                        icon: "ic_baseline_layers_24",
+                    },
+                    {
+                        type: "EditTextPreference",
                         key: "remoteDNSAddr",
                         icon: "ic_maps_directions_boat",
                     },
                     {
                         type: "EditTextPreference",
-                        key: "tlsHeaderLength",
-                        icon: "ic_baseline_layers_24",
+                        key: "dnsCacheTTL",
+                        icon: "ic_baseline_refresh_24",
+                    },
+                    {
+                        type: "EditTextPreference",
+                        key: "dnsRequestTimeout",
+                        icon: "ic_service_busy",
+                    },
+                    {
+                        "type": "SwitchPreference",
+                        "key": "enableDNSFragmentation",
+                        "icon": "ic_baseline_view_list_24",
                     },
                     {
                         type: "EditTextPreference",
@@ -112,6 +148,16 @@ class bepassClass {
                         type: "EditTextPreference",
                         key: "chunksDelayRange",
                         icon: "ic_baseline_timelapse_24",
+                    },
+                    {
+                        type: "EditTextPreference",
+                        key: "hosts",
+                        icon: "baseline_wrap_text_24",
+                    },
+                    {
+                        "type": "SwitchPreference",
+                        "key": "tlsPaddingEnabled",
+                        "icon": "ic_baseline_fingerprint_24",
                     },
                     {
                         "type": "SwitchPreference",
@@ -142,6 +188,16 @@ class bepassClass {
                         "type": "EditTextPreference",
                         "key": "workerCleanIPAndPort",
                         "icon": "ic_maps_directions_boat",
+                    },
+                ]
+            },
+            {
+                "key": "tlsPaddingCategory",
+                "preferences": [
+                    {
+                        "type": "EditTextPreference",
+                        "key": "tlsPaddingSize",
+                        "icon": "ic_file_cloud_queue",
                     },
                 ]
             },
@@ -189,9 +245,16 @@ class bepassClass {
     _onPreferenceChanged(key, newValue) {
         if (key == "wrokerEnabled") {
             if (newValue == true) {
-                neko.setPreferenceVisibility("serverSecurityCategory", true)
+                neko.setPreferenceVisibility("workerSettingsCategory", true)
             } else {
-                neko.setPreferenceVisibility("serverSecurityCategory", false)
+                neko.setPreferenceVisibility("workerSettingsCategory", false)
+            }
+        }
+        if (key == "tlsPaddingEnabled") {
+            if (newValue == true) {
+                neko.setPreferenceVisibility("tlsPaddingCategory", true)
+            } else {
+                neko.setPreferenceVisibility("tlsPaddingCategory", false)
             }
         }
     }
@@ -214,6 +277,10 @@ class bepassClass {
         this.sharedStorage.chunksDelayRange = builder.searchParams.get("chunksDelayRange")
         this.sharedStorage.workerAddress = builder.searchParams.get("workerAddress")
         this.sharedStorage.workerCleanIPAndPort = builder.searchParams.get("workerCleanIPAndPort")
+        this.sharedStorage.tlsPaddingSize = builder.searchParams.get("tlsPaddingSize")
+        this.sharedStorage.dnsCacheTTL = builder.searchParams.get("dnsCacheTTL")
+        this.sharedStorage.dnsRequestTimeout = builder.searchParams.get("dnsRequestTimeout")
+        this.sharedStorage.hosts = builder.searchParams.get("hosts")
 
         util.ifNotNull(url.searchParams.get("allow_insecure"), (it) => {
             if (it == "1" || it == "true") this.sharedStorage.allowInsecure = true
@@ -221,6 +288,14 @@ class bepassClass {
 
         util.ifNotNull(url.searchParams.get("workerEnabled"), (it) => {
             if (it == "1" || it == "true") this.sharedStorage.workerEnabled = true
+        })
+
+        util.ifNotNull(url.searchParams.get("enableDNSFragmentation"), (it) => {
+            if (it == "1" || it == "true") this.sharedStorage.enableDNSFragmentation = true
+        })
+
+        util.ifNotNull(url.searchParams.get("tlsPaddingEnabled"), (it) => {
+            if (it == "1" || it == "true") this.sharedStorage.tlsPaddingEnabled = true
         })
 
         util.ifNotNull(url.searchParams.get("workerDNSOnly"), (it) => {
@@ -238,8 +313,12 @@ class bepassClass {
 
             let configObject = {
                 "TLSHeaderLength": util.stringToInt(bepass.tlsHeaderLength),
+                "TLSPaddingEnabled": bepass.tlsPaddingEnabled,
+                "TLSPaddingSize": util.stringToRange(bepass.tlsPaddingSize),
                 "RemoteDNSAddr": bepass.remoteDNSAddr,
-                "DnsCacheTTL": 300,
+                "EnableDNSFragmentation": bepass.enableDNSFragmentation,
+                "DnsCacheTTL": util.stringToInt(bepass.dnsCacheTTL),
+                "DnsRequestTimeout": util.stringToInt(bepass.dnsRequestTimeout),
                 "BindAddress": "127.0.0.1:" + args.port,
                 "ChunksLengthBeforeSni": util.stringToRange(bepass.baSniChunksLengthRange),
                 "SniChunksLength": util.stringToRange(bepass.sniChunksLengthRange),
@@ -249,7 +328,8 @@ class bepassClass {
                 "WorkerIPPortAddress": util.stringToWorkerIPPort(bepass.workerCleanIPAndPort),
                 "WorkerEnabled": bepass.workerEnabled,
                 "WorkerDNSOnly": bepass.workerDNSOnly,
-                "EnableLowLevelSockets": true
+                "EnableLowLevelSockets": true,
+                "Hosts": util.stringToHostsArray(bepass.hosts)
             };
 
             let v = {};

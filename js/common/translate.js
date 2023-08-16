@@ -190,6 +190,27 @@ export var translates = {
     workerDNSOnly: {
         "": "DNS Only",
     },
+    dnsCacheTTL: {
+        "": "DNS Cache TTL",
+    },
+    dnsRequestTimeout: {
+        "": "DNS Request Timeout",
+    },
+    enableDNSFragmentation: {
+        "": "Enable DNS Fragmentation",
+    },
+    tlsPaddingEnabled: {
+        "": "Enable TLS Padding",
+    },
+    tlsPaddingSize: {
+        "": "TLS Padding Range",
+    },
+    hosts: {
+        "": "Domain to IP mappings(hosts)",
+    },
+    tlsPaddingCategory: {
+        "": "TLS Padding Options",
+    },
 
     // shadowTLS
     shadowTlsServerName: {
