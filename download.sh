@@ -9,10 +9,10 @@ dl_and_chmod() {
 }
 
 download_bepass() {
-  dl_and_chmod arm64-v8a "https://github.com/uoosef/bepass/releases/download/v1.1.12/Bepass-linux-arm64.e8e7a3.zip"
-  dl_and_chmod armeabi-v7a "https://github.com/uoosef/bepass/releases/download/v1.1.12/Bepass-linux-arm7.e8e7a3.zip"
-  dl_and_chmod x86 "https://github.com/uoosef/bepass/releases/download/v1.1.12/Bepass-linux-386.e8e7a3.zip"
-  dl_and_chmod x86_64 "https://github.com/uoosef/bepass/releases/download/v1.1.12/Bepass-linux-amd64.e8e7a3.zip"
+  dl_and_chmod arm64-v8a "https://github.com/uoosef/bepass/releases/download/v1.2.8-beta/Bepass-linux-arm64.83b8cd.zip"
+  dl_and_chmod armeabi-v7a "https://github.com/uoosef/bepass/releases/download/v1.2.8-beta/Bepass-linux-arm7.83b8cd.zip"
+  dl_and_chmod x86 "https://github.com/uoosef/bepass/releases/download/v1.2.8-beta/Bepass-linux-386.83b8cd.zip"
+  dl_and_chmod x86_64 "https://github.com/uoosef/bepass/releases/download/v1.2.8-beta/Bepass-linux-amd64.83b8cd.zip"
 }
 
 download_"$1"

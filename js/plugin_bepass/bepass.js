@@ -30,6 +30,10 @@ class bepassClass {
         this.defaultSharedStorage.workerCleanIPAndPort = "104.31.16.104:443";
         this.defaultSharedStorage.hosts = "example.com:1.2.3.4, yarp.lefolgoc.net:5.39.88.20";
         this.defaultSharedStorage.workerAddress = "https://example.user.worker.dev/dns-query";
+        this.defaultSharedStorage.udpBindAddress = "0.0.0.0";
+        this.defaultSharedStorage.udpReadTimeout = "120";
+        this.defaultSharedStorage.udpWriteTimeout = "120";
+        this.defaultSharedStorage.udpLinkIdleTimeout = "120";
 
         for (var k in this.defaultSharedStorage) {
             let v = this.defaultSharedStorage[k];
@@ -66,6 +70,10 @@ class bepassClass {
         builder.searchParams.set("hosts", this.sharedStorage.hosts)
         builder.searchParams.set("dnsCacheTTL", this.sharedStorage.dnsCacheTTL)
         builder.searchParams.set("dnsRequestTimeout", this.sharedStorage.dnsRequestTimeout)
+        builder.searchParams.set("udpBindAddress", this.sharedStorage.udpBindAddress)
+        builder.searchParams.set("udpReadTimeout", this.sharedStorage.udpReadTimeout)
+        builder.searchParams.set("udpWriteTimeout", this.sharedStorage.udpWriteTimeout)
+        builder.searchParams.set("udpLinkIdleTimeout", this.sharedStorage.udpLinkIdleTimeout)
 
         if (this.sharedStorage.allowInsecure) {
             builder.searchParams.set("allow_insecure", "1")
@@ -156,11 +164,6 @@ class bepassClass {
                     },
                     {
                         "type": "SwitchPreference",
-                        "key": "tlsPaddingEnabled",
-                        "icon": "ic_baseline_fingerprint_24",
-                    },
-                    {
-                        "type": "SwitchPreference",
                         "key": "allowInsecure",
                         "icon": "ic_notification_enhanced_encryption",
                     },
@@ -169,11 +172,6 @@ class bepassClass {
                         "key": "workerEnabled",
                         "icon": "ic_hardware_router",
                     },
-                ],
-            },
-            {
-                "key": "workerSettingsCategory",
-                "preferences": [
                     {
                         "type": "SwitchPreference",
                         "key": "workerDNSOnly",
@@ -189,15 +187,40 @@ class bepassClass {
                         "key": "workerCleanIPAndPort",
                         "icon": "ic_maps_directions_boat",
                     },
-                ]
-            },
-            {
-                "key": "tlsPaddingCategory",
-                "preferences": [
+                    {
+                        "type": "SwitchPreference",
+                        "key": "tlsPaddingEnabled",
+                        "icon": "ic_baseline_fingerprint_24",
+                    },
                     {
                         "type": "EditTextPreference",
                         "key": "tlsPaddingSize",
                         "icon": "ic_file_cloud_queue",
+                    },
+                ],
+            },
+            {
+                "key": "udpSettings",
+                "preferences": [
+                    {
+                        "type": "EditTextPreference",
+                        "key": "udpBindAddress",
+                        "icon": "ic_hardware_router",
+                    },
+                    {
+                        "type": "EditTextPreference",
+                        "key": "udpReadTimeout",
+                        "icon": "ic_baseline_timelapse_24",
+                    },
+                    {
+                        "type": "EditTextPreference",
+                        "key": "udpWriteTimeout",
+                        "icon": "ic_baseline_timelapse_24",
+                    },
+                    {
+                        "type": "EditTextPreference",
+                        "key": "udpLinkIdleTimeout",
+                        "icon": "ic_baseline_timelapse_24",
                     },
                 ]
             },
@@ -226,6 +249,7 @@ class bepassClass {
         }
 
         listenOnPreferenceChangedNow("workerEnabled")
+        listenOnPreferenceChangedNow("tlsPaddingEnabled")
     }
 
     sharedStorageFromProfileCache() {
@@ -243,18 +267,22 @@ class bepassClass {
     }
 
     _onPreferenceChanged(key, newValue) {
-        if (key == "wrokerEnabled") {
+        if (key == "workerEnabled") {
             if (newValue == true) {
-                neko.setPreferenceVisibility("workerSettingsCategory", true)
+                neko.setPreferenceVisibility("workerDNSOnly", true)
+                neko.setPreferenceVisibility("workerAddress", true)
+                neko.setPreferenceVisibility("workerCleanIPAndPort", true)
             } else {
-                neko.setPreferenceVisibility("workerSettingsCategory", false)
+                neko.setPreferenceVisibility("workerDNSOnly", false)
+                neko.setPreferenceVisibility("workerAddress", false)
+                neko.setPreferenceVisibility("workerCleanIPAndPort", false)
             }
         }
         if (key == "tlsPaddingEnabled") {
             if (newValue == true) {
-                neko.setPreferenceVisibility("tlsPaddingCategory", true)
+                neko.setPreferenceVisibility("tlsPaddingSize", true)
             } else {
-                neko.setPreferenceVisibility("tlsPaddingCategory", false)
+                neko.setPreferenceVisibility("tlsPaddingSize", false)
             }
         }
     }
@@ -281,6 +309,10 @@ class bepassClass {
         this.sharedStorage.dnsCacheTTL = builder.searchParams.get("dnsCacheTTL")
         this.sharedStorage.dnsRequestTimeout = builder.searchParams.get("dnsRequestTimeout")
         this.sharedStorage.hosts = builder.searchParams.get("hosts")
+        this.sharedStorage.udpBindAddress = builder.searchParams.get("udpBindAddress")
+        this.sharedStorage.udpReadTimeout = builder.searchParams.get("udpReadTimeout")
+        this.sharedStorage.udpWriteTimeout = builder.searchParams.get("udpWriteTimeout")
+        this.sharedStorage.udpLinkIdleTimeout = builder.searchParams.get("udpLinkIdleTimeout")
 
         util.ifNotNull(url.searchParams.get("allow_insecure"), (it) => {
             if (it == "1" || it == "true") this.sharedStorage.allowInsecure = true
@@ -329,7 +361,11 @@ class bepassClass {
                 "WorkerEnabled": bepass.workerEnabled,
                 "WorkerDNSOnly": bepass.workerDNSOnly,
                 "EnableLowLevelSockets": true,
-                "Hosts": util.stringToHostsArray(bepass.hosts)
+                "Hosts": util.stringToHostsArray(bepass.hosts),
+                "UDPBindAddress": bepass.udpBindAddress,
+                "UDPReadTimeout": util.stringToInt(bepass.udpReadTimeout),
+                "UDPWriteTimeout": util.stringToInt(bepass.udpWriteTimeout),
+                "udpLinkIdleTimeout": util.stringToInt(bepass.udpLinkIdleTimeout)
             };
 
             let v = {};
