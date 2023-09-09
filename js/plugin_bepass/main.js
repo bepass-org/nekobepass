@@ -38,7 +38,7 @@ export function nekoProtocol(protocolId) {
 }
 
 export function nekoAbout() {
-  return "Bepass plugin v1.5.0\n" +
+  return "Bepass plugin v1.5.3\n" +
     "Fragmentation support\n" +
     "TLS padding support\n" +
     "Full tcp proxy through cloudflare support\n" +
