@@ -29,7 +29,7 @@ class bepassClass {
         this.defaultSharedStorage.tlsPaddingSize = "200, 500";
         this.defaultSharedStorage.workerCleanIPAndPort = "104.31.16.104:443";
         this.defaultSharedStorage.hosts = "example.com:1.2.3.4, yarp.lefolgoc.net:5.39.88.20";
-        this.defaultSharedStorage.workerAddress = "https://example.user.worker.dev/dns-query";
+        this.defaultSharedStorage.workerAddress = "https://example.user.workers.dev/dns-query";
         this.defaultSharedStorage.udpBindAddress = "127.0.0.1";
         this.defaultSharedStorage.udpReadTimeout = "120";
         this.defaultSharedStorage.udpWriteTimeout = "120";
