@@ -9,6 +9,6 @@ android {
     defaultConfig {
         applicationId = "moe.matsuri.plugin.bepass"
         versionCode = 1
-        versionName = "1.5.4"
+        versionName = "1.6.2"
     }
 }
